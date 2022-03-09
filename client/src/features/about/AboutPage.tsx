@@ -56,7 +56,7 @@ export default function AboutPage() {
             agent.TestErrors.get500Error().catch((error) => console.log(error))
           }
         >
-          Test 400 Error
+          Test 500 Error
         </Button>
         <Button variant="contained" onClick={getValidationError}>
           Test VAlidation Error
