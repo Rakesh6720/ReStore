@@ -1,4 +1,4 @@
-import { Product } from "../../app/layout/models/product";
+import { Product } from "../../app/models/product";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
