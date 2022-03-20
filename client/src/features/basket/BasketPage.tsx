@@ -17,22 +17,25 @@ import useStoreContext from "../../app/context/StoreContext";
 
 export default function BasketPage() {
   const { basket, setBasket, removeItem } = useStoreContext();
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState({
+    loading: false,
+    name: "",
+  });
 
-  function handleAddItem(productId: number) {
-    setLoading(true);
+  function handleAddItem(productId: number, name: string) {
+    setStatus({ loading: true, name: name });
     agent.Basket.addItem(productId)
       .then((basket) => setBasket(basket))
       .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
+      .finally(() => setStatus({ loading: false, name: "" }));
   }
 
-  function handleRemoveItem(productId: number, quantity = 1) {
-    setLoading(true);
+  function handleRemoveItem(productId: number, quantity = 1, name: string) {
+    setStatus({ loading: true, name: name });
     agent.Basket.removeItem(productId, quantity)
       .then(() => removeItem(productId, quantity))
       .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
+      .finally(() => setStatus({ loading: false, name: "" }));
   }
 
   if (!basket)
@@ -71,14 +74,18 @@ export default function BasketPage() {
               </TableCell>
               <TableCell align="center">
                 <IconButton
-                  onClick={() => handleRemoveItem(item.productId)}
+                  onClick={() =>
+                    handleRemoveItem(item.productId, 1, "rem" + item.productId)
+                  }
                   color="error"
                 >
                   <Remove />
                 </IconButton>
                 {item.quantity}
                 <IconButton
-                  onClick={() => handleAddItem(item.productId)}
+                  onClick={() =>
+                    handleAddItem(item.productId, "add" + item.productId)
+                  }
                   color="secondary"
                 >
                   <Add />
