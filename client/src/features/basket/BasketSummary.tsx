@@ -7,10 +7,16 @@ import {
   TableCell,
   Typography,
 } from "@mui/material";
+import useStoreContext from "../../app/context/StoreContext";
 
 export default function BasketSummary() {
-  const subtotal = 0;
-  const deliveryFee = 0;
+  // get basket from store context
+  const { basket } = useStoreContext();
+  // if subtotal undefined set default to 0
+  const subtotal =
+    basket?.items.reduce((sum, item) => sum + item.quantity * item.price, 0) ??
+    0;
+  const deliveryFee = subtotal > 10000 ? 0 : 500;
 
   return (
     <>
