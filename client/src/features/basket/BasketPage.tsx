@@ -12,27 +12,31 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import agent from "../../app/api/agent";
 import useStoreContext from "../../app/context/StoreContext";
 
 export default function BasketPage() {
   const { basket, setBasket, removeItem } = useStoreContext();
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState({
+    loading: false,
+    name: "",
+  });
 
-  function handleAddItem(productId: number) {
-    setLoading(true);
+  function handleAddItem(productId: number, name: string) {
+    setStatus({ loading: true, name: name });
     agent.Basket.addItem(productId)
       .then((basket) => setBasket(basket))
       .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
+      .finally(() => setStatus({ loading: false, name: "" }));
   }
 
-  function handleRemoveItem(productId: number, quantity = 1) {
-    setLoading(true);
+  function handleRemoveItem(productId: number, quantity = 1, name: string) {
+    setStatus({ loading: true, name: name });
     agent.Basket.removeItem(productId, quantity)
       .then(() => removeItem(productId, quantity))
       .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
+      .finally(() => setStatus({ loading: false, name: "" }));
   }
 
   if (!basket)
@@ -70,19 +74,29 @@ export default function BasketPage() {
                 {(item.price / 100).toFixed(2)}
               </TableCell>
               <TableCell align="center">
-                <IconButton
-                  onClick={() => handleRemoveItem(item.productId)}
+                <LoadingButton
+                  loading={
+                    status.loading && status.name === "rem" + item.productId
+                  }
+                  onClick={() =>
+                    handleRemoveItem(item.productId, 1, "rem" + item.productId)
+                  }
                   color="error"
                 >
                   <Remove />
-                </IconButton>
+                </LoadingButton>
                 {item.quantity}
-                <IconButton
-                  onClick={() => handleAddItem(item.productId)}
+                <LoadingButton
+                  loading={
+                    status.loading && status.name === "add" + item.productId
+                  }
+                  onClick={() =>
+                    handleAddItem(item.productId, "add" + item.productId)
+                  }
                   color="secondary"
                 >
                   <Add />
-                </IconButton>
+                </LoadingButton>
               </TableCell>
               <TableCell align="right">
                 {((item.price / 100) * item.quantity).toFixed(2)}
@@ -90,7 +104,11 @@ export default function BasketPage() {
               <TableCell align="right">
                 <IconButton
                   onClick={() =>
-                    handleRemoveItem(item.productId, item.quantity)
+                    handleRemoveItem(
+                      item.productId,
+                      item.quantity,
+                      "rem" + item.productId
+                    )
                   }
                   color="error"
                 >
