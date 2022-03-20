@@ -12,6 +12,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import agent from "../../app/api/agent";
 import useStoreContext from "../../app/context/StoreContext";
 
@@ -73,23 +74,29 @@ export default function BasketPage() {
                 {(item.price / 100).toFixed(2)}
               </TableCell>
               <TableCell align="center">
-                <IconButton
+                <LoadingButton
+                  loading={
+                    status.loading && status.name === "rem" + item.productId
+                  }
                   onClick={() =>
                     handleRemoveItem(item.productId, 1, "rem" + item.productId)
                   }
                   color="error"
                 >
                   <Remove />
-                </IconButton>
+                </LoadingButton>
                 {item.quantity}
-                <IconButton
+                <LoadingButton
+                  loading={
+                    status.loading && status.name === "add" + item.productId
+                  }
                   onClick={() =>
                     handleAddItem(item.productId, "add" + item.productId)
                   }
                   color="secondary"
                 >
                   <Add />
-                </IconButton>
+                </LoadingButton>
               </TableCell>
               <TableCell align="right">
                 {((item.price / 100) * item.quantity).toFixed(2)}
