@@ -97,7 +97,11 @@ export default function BasketPage() {
               <TableCell align="right">
                 <IconButton
                   onClick={() =>
-                    handleRemoveItem(item.productId, item.quantity)
+                    handleRemoveItem(
+                      item.productId,
+                      item.quantity,
+                      "rem" + item.productId
+                    )
                   }
                   color="error"
                 >
