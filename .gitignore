@@ -456,3 +456,5 @@ API/appsettings.json
 API/store.db-wal
 API/store.db-wal
 API/store.db
+API/store.db-shm
+API/store.db
