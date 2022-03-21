@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Grid,
-  IconButton,
   Paper,
   Table,
   TableBody,
@@ -111,7 +110,7 @@ export default function BasketPage() {
                   {((item.price / 100) * item.quantity).toFixed(2)}
                 </TableCell>
                 <TableCell align="right">
-                  <IconButton
+                  <LoadingButton
                     onClick={() =>
                       handleRemoveItem(
                         item.productId,
@@ -122,7 +121,7 @@ export default function BasketPage() {
                     color="error"
                   >
                     <Delete />
-                  </IconButton>
+                  </LoadingButton>
                 </TableCell>
               </TableRow>
             ))}
