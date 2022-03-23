@@ -12,7 +12,6 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import agent from "../../app/api/agent";
-import useStoreContext from "../../app/context/StoreContext";
 import { Product } from "../../app/models/product";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { currencyFormat } from "../../app/util/util";
