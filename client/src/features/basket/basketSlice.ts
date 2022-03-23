@@ -34,7 +34,7 @@ export const basketSlice = createSlice({
       const { productId, quantity } = action.payload;
       // find item index
       const itemIndex = state.basket?.items.findIndex(
-        (i) => productId === productId
+        (i) => i.productId === productId
       );
       // if item not in basket return
       if (itemIndex === -1 || itemIndex === undefined) {
