@@ -23,29 +23,23 @@ export const addBasketItemAsync = createAsyncThunk<
   }
 });
 
+export const removeBasketItemAsync = createAsyncThunk<
+  void,
+  { productId: number; quantity?: number }
+>("basket/removeBasketItemAsync", async ({ productId, quantity = 1 }) => {
+  try {
+    await agent.Basket.removeItem(productId, quantity);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export const basketSlice = createSlice({
   name: "basket",
   initialState,
   reducers: {
     setBasket: (state, action) => {
       state.basket = action.payload;
-    },
-    removeItem: (state, action) => {
-      const { productId, quantity } = action.payload;
-      // find item index
-      const itemIndex = state.basket?.items.findIndex(
-        (i) => i.productId === productId
-      );
-      // if item not in basket return
-      if (itemIndex === -1 || itemIndex === undefined) {
-        return;
-      }
-      // overwrite typescript safety because we know basket will exist
-      state.basket!.items[itemIndex].quantity -= quantity;
-      // if item updated quantity is 0 remove from basket items array
-      if (state.basket?.items[itemIndex].quantity === 0) {
-        state.basket.items.splice(itemIndex, 1);
-      }
     },
   },
   extraReducers: (builder) => {
@@ -59,6 +53,30 @@ export const basketSlice = createSlice({
     builder.addCase(addBasketItemAsync.rejected, (state, action) => {
       state.status = "idle";
     });
+    builder.addCase(removeBasketItemAsync.pending, (state, action) => {
+      state.status = "pendingRemoveItem" + action.meta.arg.productId;
+    });
+    builder.addCase(removeBasketItemAsync.fulfilled, (state, action) => {
+      const { productId, quantity } = action.meta.arg;
+      // find item index
+      const itemIndex = state.basket?.items.findIndex(
+        (i) => i.productId === productId
+      );
+      // if item not in basket return
+      if (itemIndex === -1 || itemIndex === undefined) {
+        return;
+      }
+      // overwrite typescript safety because we know basket will exist
+      state.basket!.items[itemIndex].quantity -= quantity!;
+      // if item updated quantity is 0 remove from basket items array
+      if (state.basket?.items[itemIndex].quantity === 0) {
+        state.basket.items.splice(itemIndex, 1);
+      }
+      state.status = "idle";
+    });
+    builder.addCase(removeBasketItemAsync.rejected, (state, action) => {
+      state.status = "idle";
+    });
   },
 });
-export const { setBasket, removeItem } = basketSlice.actions;
+export const { setBasket } = basketSlice.actions;
