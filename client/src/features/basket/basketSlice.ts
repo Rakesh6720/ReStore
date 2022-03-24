@@ -25,8 +25,8 @@ export const addBasketItemAsync = createAsyncThunk<
 
 export const removeBasketItemAsync = createAsyncThunk<
   void,
-  { productId: number; quantity?: number }
->("basket/removeBasketItemAsync", async ({ productId, quantity = 1 }) => {
+  { productId: number; quantity: number; name?: string }
+>("basket/removeBasketItemAsync", async ({ productId, quantity }) => {
   try {
     await agent.Basket.removeItem(productId, quantity);
   } catch (error) {
@@ -54,7 +54,8 @@ export const basketSlice = createSlice({
       state.status = "idle";
     });
     builder.addCase(removeBasketItemAsync.pending, (state, action) => {
-      state.status = "pendingRemoveItem" + action.meta.arg.productId;
+      state.status =
+        "pendingRemoveItem" + action.meta.arg.productId + action.meta.arg.name;
     });
     builder.addCase(removeBasketItemAsync.fulfilled, (state, action) => {
       const { productId, quantity } = action.meta.arg;
@@ -74,7 +75,7 @@ export const basketSlice = createSlice({
       }
       state.status = "idle";
     });
-    builder.addCase(removeBasketItemAsync.rejected, (state, action) => {
+    builder.addCase(removeBasketItemAsync.rejected, (state) => {
       state.status = "idle";
     });
   },
