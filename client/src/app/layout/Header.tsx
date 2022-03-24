@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { NavLink, Link } from "react-router-dom";
 import useStoreContext from "../context/StoreContext";
+import { useAppSelector } from "../store/configureStore";
 
 interface Props {
   darkMode: boolean;
@@ -41,7 +42,8 @@ const rightLinks = [
   { title: "register", path: "/register" },
 ];
 export default function Header({ darkMode, handleThemeChange }: Props) {
-  const { basket } = useStoreContext();
+  // get basket from Redux Store
+  const { basket } = useAppSelector((state) => state.basket);
   // get the counts of item in basket multiplied by quantity
   const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
 
