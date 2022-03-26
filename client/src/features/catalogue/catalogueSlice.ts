@@ -5,6 +5,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import agent from "../../app/api/agent";
+import { RootState } from "../../app/store/configureStore";
 
 const productsAdapter = createEntityAdapter<Product>();
 
@@ -40,3 +41,7 @@ export const catalogueSlice = createSlice({
     });
   },
 });
+
+export const productSelectors = productsAdapter.getSelectors(
+  (state: RootState) => state.catalogue
+);
