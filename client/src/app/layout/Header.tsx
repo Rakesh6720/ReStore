@@ -11,7 +11,6 @@ import {
   Box,
 } from "@mui/material";
 import { NavLink, Link } from "react-router-dom";
-import useStoreContext from "../context/StoreContext";
 import { useAppSelector } from "../store/configureStore";
 
 interface Props {

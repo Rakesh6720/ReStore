@@ -34,16 +34,19 @@ namespace API.Controllers
         public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantity) {
             // get basket
             var basket = await RetrieveBasket();
+            
             // create basket
             if (basket == null) basket = CreateBasket();
             
             // get product
             var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
+
+            if (product == null) return BadRequest(new ProblemDetails{Title="Product Not Found"});
             // add item
             basket.AddItem(product, quantity);
 
             var result = await _context.SaveChangesAsync() > 0;
+
             // save changes
             if (result) return CreatedAtRoute("GetBasket", MapBasketToDto(basket));
 

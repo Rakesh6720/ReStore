@@ -1,4 +1,3 @@
-import { Product } from "../../app/models/product";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
@@ -12,7 +11,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { currencyFormat } from "../../app/util/util";
@@ -130,7 +128,7 @@ export default function ProductDetails() {
               disabled={
                 item?.quantity === quantity || (!item && quantity === 0)
               }
-              loading={status.includes("pending" + item?.productId)}
+              loading={status.includes("pending")}
               onClick={handleUpdateCart}
               sx={{ height: "55px" }}
               color="primary"
