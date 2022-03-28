@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.Entities;
 using API.Data;
+using API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
@@ -23,14 +24,11 @@ namespace API.Controllers
         public async Task<ActionResult<List<Product>>> GetProducts(string OrderBy) {
             // var products = await _context.Products.ToListAsync();
             // return Ok(products);
-            var query =  _context.Products.AsQueryable();
+            var query =  _context.Products
+                .Sort(OrderBy)
+                .AsQueryable();
 
-            query = OrderBy switch
-            {
-                "price" => query.OrderBy(p => p.Price),
-                "priceDesc" => query.OrderByDescending(p => p.Price),
-                _ => query.OrderBy(p => p.Name)
-            };
+
 
             return await query.ToListAsync();
         }
