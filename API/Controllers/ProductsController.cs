@@ -20,9 +20,19 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts() {
-            var products = await _context.Products.ToListAsync();
-            return Ok(products);
+        public async Task<ActionResult<List<Product>>> GetProducts(string OrderBy) {
+            // var products = await _context.Products.ToListAsync();
+            // return Ok(products);
+            var query =  _context.Products.AsQueryable();
+
+            query = OrderBy switch
+            {
+                "price" => query.OrderBy(p => p.Price),
+                "priceDesc" => query.OrderByDescending(p => p.Price),
+                _ => query.OrderBy(p => p.Name)
+            };
+
+            return await query.ToListAsync();
         }
 
         [HttpGet("{id}")]
