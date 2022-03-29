@@ -1,5 +1,4 @@
-import { Grid, Pagination, Paper, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Grid, Paper } from "@mui/material";
 import { useEffect } from "react";
 import AppPagination from "../../app/components/AppPagination";
 import CheckboxButtons from "../../app/components/CheckboxButtons";
@@ -46,7 +45,7 @@ export default function Catalogue() {
     return <LoadingComponent message="Loading products..." />;
 
   return (
-    <Grid container spacing={4}>
+    <Grid container columnSpacing={4}>
       <Grid item xs={3}>
         <Paper sx={{ mb: 2 }}>
           <ProductSearch />
@@ -83,7 +82,7 @@ export default function Catalogue() {
         <ProductList products={products} />
       </Grid>
       <Grid item xs={3} />
-      <Grid item xs={9}>
+      <Grid item xs={9} sx={{ mb: 2 }}>
         <AppPagination
           metaData={metaData}
           onPageChange={(page: number) =>
