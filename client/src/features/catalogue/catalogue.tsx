@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect } from "react";
+import CheckboxButtons from "../../app/components/CheckboxButtons";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
@@ -66,26 +67,22 @@ export default function Catalogue() {
           />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
-          <FormGroup>
-            {brands.map((brand) => (
-              <FormControlLabel
-                key={brand}
-                control={<Checkbox />}
-                label={brand}
-              />
-            ))}
-          </FormGroup>
+          <CheckboxButtons
+            items={brands}
+            checked={productParams.brands}
+            onChange={(items: string[]) =>
+              dispatch(setProductParams({ brands: items }))
+            }
+          />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
-          <FormGroup>
-            {types.map((types) => (
-              <FormControlLabel
-                key={types}
-                control={<Checkbox />}
-                label={types}
-              />
-            ))}
-          </FormGroup>
+          <CheckboxButtons
+            items={types}
+            checked={productParams.types}
+            onChange={(items: string[]) =>
+              dispatch(setProductParams({ types: items }))
+            }
+          />
         </Paper>
       </Grid>
       <Grid item xs={9}>
