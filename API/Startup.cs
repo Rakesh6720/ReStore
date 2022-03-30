@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Data;
+using API.Entities;
 using API.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace API
@@ -40,6 +35,14 @@ namespace API
             });
 
             services.AddCors();
+
+            services.AddIdentityCore<User>()
+                .AddRoles<IdentityRole>()
+                // add identity tables
+                .AddEntityFrameworkStores<StoreContext>();
+
+            services.AddAuthentication();
+            services.AddAuthorization();
             
         }
 
