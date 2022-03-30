@@ -1,6 +1,7 @@
 using API.Data;
 using API.Entities;
 using API.Middleware;
+using API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -45,6 +46,8 @@ namespace API
 
             services.AddAuthentication();
             services.AddAuthorization();
+            // scope to HTTP request
+            services.AddScoped<TokenService>();
             
         }
 
