@@ -1,7 +1,9 @@
+using System.Text;
 using API.Data;
 using API.Entities;
 using API.Middleware;
 using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace API
@@ -44,7 +47,23 @@ namespace API
                 // add identity tables
                 .AddEntityFrameworkStores<StoreContext>();
 
-            services.AddAuthentication();
+            // define authentication scheme
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt => {
+                    // token validation parameters
+                    opt.TokenValidationParameters = new TokenValidationParameters {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        // true because gave token 7 day lifetime
+                        ValidateLifetime = true,
+                        // check secret key added to token
+                        ValidateIssuerSigningKey = true,
+                        // match key from token service
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTSettings:TokenKey"]))
+                    };
+                });
+
+
             services.AddAuthorization();
             // scope to HTTP request
             services.AddScoped<TokenService>();
@@ -70,6 +89,9 @@ namespace API
                 opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
             });
 
+            // must authenticate before authorizing user
+            app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
